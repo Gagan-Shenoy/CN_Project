@@ -39,12 +39,20 @@ pckts = scapy.rdpcap(file)
 vendor_set = set()
 fake_addrs = set()
 for pckt in pckts:
-    mac_addr = pckt['Ethernet'].src
-    vendors = get_vendors(mac_addr)
-    for vendor in vendors:
-        vendor_set.add(vendor)
-    if not vendors:
-        fake_addrs.add(mac_addr)
+    try :
+        mac_addr = pckt['Ethernet'].src
+        vendors = get_vendors(mac_addr)
+        for vendor in vendors:
+            vendor_set.add(vendor)
+        if not vendors:
+            fake_addrs.add(mac_addr)
+    except:
+        continue
 
+print("Real Mac Addresses with Vendors : ")
 for vendor in vendor_set:
     print(vendor)
+
+print("\nFake Mac Addresses : ")
+for mac_addr in fake_addrs:
+    print(mac_addr)
