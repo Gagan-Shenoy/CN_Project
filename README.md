@@ -1,7 +1,7 @@
 # CN_Project
 Tool to extract the names of vendors that have made ethernet/Bluetooth devices  to check the MAC fakeness.
 
-##Steps to use the project:
+## Steps to use the project:
 
 1. Fork and Clone
 
