@@ -10,7 +10,7 @@ Tool to extract the names of vendors that have made ethernet/Bluetooth devices  
     python -m venv venv
     
     venv\Scripts\activate
-    ``
+    ```
 3. Install all the requirements
 
     ```bash
