@@ -2,11 +2,18 @@ import sqlite3
 import scapy.all as scapy
 
 class Vendor:
-    def __init__(self, vendor_tuple):
-        self.Registry, self.Assignment, self.Organization, self.Address = vendor_tuple
+    def __init__(self, vendor_tuple, mac_addr):
+        self.Registry, self.Assignment, self.Organization, self.Address = vendor_tuple 
+        self.mac_addr = mac_addr
 
     def __str__(self):
-        return f"Registry - {self.Registry}, Assignment - {self.Assignment}, Organization - {self.Organization}, Address - {self.Address}"
+        return f"Mac Address - {self.mac_addr}, Registry - {self.Registry}, Assignment - {self.Assignment}, Organization - {self.Organization}, Address - {self.Address}"
+    
+    def __eq__(self, other):
+        return self.Assignment == other.Assignment
+    
+    def __hash__(self):
+        return int(self.Assignment, 16)
 
 def get_vendors(mac_addr):
     '''Input - Mac Address
@@ -14,10 +21,10 @@ def get_vendors(mac_addr):
     '''
     con = sqlite3.connect("mac.db")
     cur = con.cursor()
-    result = cur.execute("SELECT * FROM mac WHERE Assignment = ?", [mac_addr]).fetchall()
+    result = cur.execute("SELECT * FROM mac WHERE Assignment = ?", [format_mac(mac_addr)]).fetchall()
     vendors = []
     for i in result:
-        vendors.append(Vendor(i))
+        vendors.append(Vendor(i, mac_addr))
     con.close()
     return vendors
 
@@ -29,8 +36,15 @@ def format_mac(mac_addr):
 
 file = input("Enter file(pcap) path : ")
 pckts = scapy.rdpcap(file)
+vendor_set = set()
+fake_addrs = set()
 for pckt in pckts:
     mac_addr = pckt['Ethernet'].src
-    vendors = get_vendors(format_mac(mac_addr))
+    vendors = get_vendors(mac_addr)
     for vendor in vendors:
-        print(vendor)
+        vendor_set.add(vendor)
+    if not vendors:
+        fake_addrs.add(mac_addr)
+
+for vendor in vendor_set:
+    print(vendor)
