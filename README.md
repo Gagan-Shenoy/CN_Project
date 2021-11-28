@@ -22,3 +22,7 @@ Tool to extract the names of vendors that have made ethernet/Bluetooth devices  
     python db_create.py
     ```
 5. Run the app.py
+    ```bash
+    python app.py
+    ```
+ ### Also make sure that you are giving the right path to the pcap file and also the file is of pcap format
