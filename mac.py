@@ -1,6 +1,5 @@
 import sqlite3
 import scapy.all as scapy
-from tkinter.filedialog import askopenfilename
 
 class Vendor:
     def __init__(self, vendor_tuple, mac_addr):
