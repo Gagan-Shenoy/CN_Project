@@ -1,4 +1,5 @@
 import sqlite3
+import scapy.all as scapy
 
 class Vendor:
     def __init__(self, vendor_tuple):
@@ -20,7 +21,16 @@ def get_vendors(mac_addr):
     con.close()
     return vendors
 
-print("Enter a Mac address : ")
-vendors = get_vendors(input())
-for vendor in vendors:
-    print(vendor)
+def format_mac(mac_addr):
+    t = mac_addr.split(sep = ":", maxsplit = 4)
+    fmac_addr = "".join(t[:3])
+    fmac_addr = fmac_addr.upper()
+    return fmac_addr
+
+file = input("Enter file(pcap) path : ")
+pckts = scapy.rdpcap(file)
+for pckt in pckts:
+    mac_addr = pckt['Ethernet'].src
+    vendors = get_vendors(format_mac(mac_addr))
+    for vendor in vendors:
+        print(vendor)
